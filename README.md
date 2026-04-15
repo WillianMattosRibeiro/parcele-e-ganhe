@@ -14,41 +14,46 @@ Ideal para quem quer entender quanto realmente sai do bolso ao comprar parcelado
   - Parcela paga
   - Saldo final
 - Resultados resumidos:
-  - Capital próprio realmente utilizado
-  - Valor total se pago à vista
+  - Valor que saiu do seu bolso (capital próprio)
+  - Valor total pago nas parcelas
   - Economia gerada pelo rendimento
   - Percentual de economia
-- Interface moderna, bonita e responsiva
+- Opção para parcelamento com ou sem juros
+- Possibilidade de atraso no primeiro pagamento (em meses)
+- Interface moderna, bonita e responsiva com tema dark
 - Totalmente offline (arquivo único)
+- Seção de doações para apoiar o projeto
 
 ## 🎯 Exemplo de Uso
 
 **Situação:**
 - Você tem R$ 1.000,00
 - Compra um produto de R$ 1.000,00 parcelado em **10x de R$ 100,00**
-- Enquanto paga as parcelas, o restante do dinheiro rende **1% ao mês**
+- Enquanto paga as parcelas, o restante do dinheiro rende **1,15% ao mês**
 
 **Resultado:**
-- Você descobre quanto realmente saiu do seu bolso (capital próprio)
+- Você descobre quanto realmente saiu do seu bolso (valor que saiu do bolso)
 - Quanto economizou graças ao rendimento
 - Evolução detalhada mês a mês
 
 ## 🖥️ Como usar
 
-1. Baixe o arquivo `calculadora-juros-compostos.html`
+1. Baixe o arquivo `index.html`
 2. Abra o arquivo diretamente no seu navegador (não precisa de servidor)
 3. Preencha os campos:
-   - Valor Inicial
-   - Valor de cada parcela
-   - Número de parcelas
-   - Taxa de rentabilidade mensal (%)
-4. Clique em **"Calcular Agora"**
+    - Quanto você tinha disponível no início (valor inicial)
+    - Em quantas parcelas você vai pagar
+    - Quando será o primeiro pagamento
+    - Se o parcelamento tem juros e taxa de juros (mensal ou anual)
+    - Valor de cada parcela (calculado automaticamente se sem juros)
+    - Quanto rende seu dinheiro por mês (%)
+4. Clique em **"Calcular quanto eu realmente vou gastar"**
 
 ## 📁 Estrutura do Projeto
 
 ```
-calculadora-juros-compostos/
-├── calculadora-juros-compostos.html   ← Arquivo principal (único)
+parcele-e-ganhe/
+├── index.html   ← Arquivo principal (único)
 └── README.md
 ```
 

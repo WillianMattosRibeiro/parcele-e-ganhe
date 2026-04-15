@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Juros Compostos com Saques</title>
+  <title>Compensa Parcelar ou Pagar á Vista?</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -38,8 +38,8 @@
 <body class="min-h-screen text-white">
   <div class="max-w-4xl mx-auto py-12 px-6">
     <div class="text-center mb-10">
-      <h1 class="text-4xl font-bold mb-2">📈 Quanto eu realmente gastei parcelando?</h1>
-      <p class="text-slate-400 text-lg">Simule seu parcelamento enquanto o dinheiro restante rende</p>
+      <h1 class="text-4xl font-bold mb-2">📈 Compensa Parcelar ou Pagar á Vista?</h1>
+      <p class="text-slate-400 text-lg">Simule pagamento parcelado (com o saldo total rendendo na conta) ou a vista para ver qual opção compensa mais</p>
     </div>
 
     <div class="card rounded-3xl shadow-2xl p-8 border border-white/10">
@@ -47,7 +47,7 @@
       <form id="form" class="space-y-8">
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
-            <i class="fas fa-coins mr-2"></i> Quanto você tinha disponível no início?
+            <i class="fas fa-coins mr-2"></i> Valor a ser pago (preço do produto)
           </label>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
@@ -58,7 +58,7 @@
 
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
-            <i class="fas fa-calendar-alt mr-2"></i> Em quantas parcelas você vai pagar?
+            <i class="fas fa-calendar-alt mr-2"></i> Em quantas parcelas dividir o pagamento?
           </label>
           <input type="number" id="numParcelas" value="10" min="1"
                  class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
@@ -66,10 +66,10 @@
 
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
-            <i class="fas fa-hourglass-half mr-2"></i> Quando será o primeiro pagamento?
+            <i class="fas fa-hourglass-half mr-2"></i> Quando começa o pagamento (primeira parcela)?
           </label>
           <select id="mesesPrimeiroPagamento" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
-            <option value="0" selected>Hoje - Primeira parcela ainda neste mês</option>
+            <option value="0" selected>Hoje (ainda neste mês)</option>
             <option value="1">Em 30 dias</option>
             <option value="2">Em 60 dias</option>
             <option value="3">Em 90 dias</option>
@@ -79,7 +79,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">O parcelamento tem juros?</label>
+            <label class="block text-sm font-medium text-slate-300 mb-2">O parcelamento inclui juros?</label>
             <div class="flex items-center gap-3">
               <span class="font-medium text-emerald-400">Sem juros</span>
               <label class="relative inline-flex items-center cursor-pointer">
@@ -92,7 +92,7 @@
           </div>
 
           <div id="secaoJuros" class="hidden">
-            <label class="block text-sm font-medium text-slate-300 mb-3">Taxa de juros do parcelamento</label>
+            <label class="block text-sm font-medium text-slate-300 mb-3">Taxa de juros do parcelamento/financiamento</label>
             <div class="flex items-center justify-between bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4">
               <span id="labelMensal" class="toggle-label text-emerald-400">Mensal</span>
               <label class="relative inline-flex items-center cursor-pointer mx-4">
@@ -111,8 +111,30 @@
         </div>
 
         <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Aplicar desconto no pagamento à vista?</label>
+          <div class="flex items-center gap-3">
+            <span class="font-medium text-slate-400">Não</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="comDesconto" class="sr-only peer" onchange="toggleDesconto()">
+              <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500 rounded-full peer peer-checked:bg-emerald-500"></div>
+              <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition peer-checked:translate-x-5"></div>
+            </label>
+            <span class="font-medium text-emerald-400">Sim</span>
+          </div>
+        </div>
+
+        <div id="secaoDesconto" class="hidden mt-4">
+          <label class="block text-sm font-medium text-slate-300 mb-3">Percentual de desconto à vista</label>
+          <div class="mt-4 relative">
+            <input type="number" id="descontoVista" value="5" step="0.01" min="0" max="100"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+            <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+          </div>
+        </div>
+
+        <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
-            <i class="fas fa-receipt mr-2"></i> Valor de cada parcela
+            <i class="fas fa-receipt mr-2"></i> Valor de cada parcela mensal
           </label>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
@@ -123,7 +145,7 @@
 
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
-            <i class="fas fa-chart-line mr-2"></i> Quanto rende seu dinheiro por mês?
+            <i class="fas fa-chart-line mr-2"></i> Rentabilidade mensal do seu dinheiro (%)
           </label>
           <div class="relative">
             <input type="number" id="taxaMensal" value="1.15" step="0.01"
@@ -141,29 +163,24 @@
 
       <!-- Resultados -->
       <div id="resultado" class="hidden mt-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div class="bg-slate-900/70 rounded-2xl p-6 border border-emerald-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-wallet"></i> Valor que saiu do seu bolso</p>
-            <p id="capitalProprio" class="text-4xl font-bold text-emerald-400 mt-2">R$ 0,00</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-slate-900/70 rounded-2xl p-6 border border-emerald-500/30">
+              <p id="labelTotalVista" class="text-slate-400 text-sm flex items-center gap-2 mb-1"><i class="fas fa-wallet"></i> Total a vista (valor a ser pago menos o desconto caso tenha desconto a vista)</p>
+              <p id="capitalProprio" class="text-4xl font-bold text-emerald-400">R$ 0,00</p>
+            </div>
+            <div class="bg-slate-900/70 rounded-2xl p-6 border border-amber-500/30">
+              <p id="labelSomaParcelas" class="text-slate-400 text-sm flex items-center gap-2 mb-1"><i class="fas fa-receipt"></i> Total parcelado (soma das parcelas com juros)</p>
+              <p id="valorVista" class="text-4xl font-bold text-amber-400">R$ 0,00</p>
+            </div>
           </div>
-          <div class="bg-slate-900/70 rounded-2xl p-6 border border-amber-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-receipt"></i> Total pago nas parcelas</p>
-            <p id="valorVista" class="text-4xl font-bold text-amber-400 mt-2">R$ 0,00</p>
-          </div>
-        </div>
 
-        <div class="bg-gradient-to-r from-emerald-900/40 to-teal-900/40 rounded-2xl p-6 mb-8 border border-emerald-500/20">
-          <div class="flex justify-between items-center">
-            <div>
-              <p class="text-emerald-300 text-sm font-medium">Economia gerada pelo rendimento</p>
-              <p id="economia" class="text-4xl font-bold text-emerald-400">R$ 0,00</p>
-            </div>
-            <div class="text-right">
-              <p class="text-emerald-300 text-sm font-medium">Percentual de economia</p>
-              <p id="percentualEconomia" class="text-4xl font-bold text-emerald-400">0%</p>
-            </div>
+          <div id="analiseBox" class="bg-gradient-to-r from-emerald-900/40 to-teal-900/40 rounded-2xl p-6 mb-8 border border-emerald-500/20 text-slate-100">
+            <h3 class="text-emerald-300 text-sm font-medium mb-3 flex items-center gap-2">
+              <i class="fas fa-chart-bar"></i> Resultado da Análise
+            </h3>
+            <p id="statusRecomendacao" class="text-4xl font-bold mb-4 leading-tight"></p>
+            <p id="analiseTexto" class="leading-relaxed text-base"></p>
           </div>
-        </div>
 
         <div class="mt-10">
           <h2 class="text-2xl font-semibold mb-5 flex items-center gap-3">
@@ -297,6 +314,17 @@
       const comJuros = document.getElementById('comJuros').checked;
       document.getElementById('secaoJuros').classList.toggle('hidden', !comJuros);
       atualizarParcela();
+      if (!document.getElementById('resultado').classList.contains('hidden')) {
+        atualizarResultados();
+      }
+    }
+
+    function toggleDesconto() {
+      const comDesconto = document.getElementById('comDesconto').checked;
+      document.getElementById('secaoDesconto').classList.toggle('hidden', !comDesconto);
+      if (!document.getElementById('resultado').classList.contains('hidden')) {
+        atualizarResultados();
+      }
     }
 
     function atualizarParcela() {
@@ -341,22 +369,28 @@
       }
     }
 
+    let monthlyData = [];
+    let capitalInicialGlobal = 0;
+    let totalParcelasGlobal = 0;
+    let numParcelasGlobal = 0;
+    let valorParcelaGlobal = 0;
+
     function calcular() {
       // (Mantida igual à versão anterior - lógica correta de rendimento a partir do mês 2)
-      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value) || 0;
-      const valorParcela = parseFloat(document.getElementById('valorParcela').value) || 0;
-      const numParcelas = parseInt(document.getElementById('numParcelas').value) || 0;
+      capitalInicialGlobal = parseFloat(document.getElementById('capitalInicial').value) || 0;
+      valorParcelaGlobal = parseFloat(document.getElementById('valorParcela').value) || 0;
+      numParcelasGlobal = parseInt(document.getElementById('numParcelas').value) || 0;
       const mesesAtePrimeiro = parseInt(document.getElementById('mesesPrimeiroPagamento').value) || 0;
       let taxaRendimento = parseFloat(document.getElementById('taxaMensal').value) || 0;
 
-      if (capitalInicial <= 0 || valorParcela <= 0 || numParcelas <= 0) {
+      if (capitalInicialGlobal <= 0 || valorParcelaGlobal <= 0 || numParcelasGlobal <= 0) {
         alert("Por favor, preencha todos os campos com valores válidos.");
         return;
       }
 
       taxaRendimento = taxaRendimento / 100;
-      let saldo = capitalInicial;
-      const monthlyData = [];
+      let saldo = capitalInicialGlobal;
+      monthlyData = [];
       let mes = 1;
 
       for (let i = 0; i < mesesAtePrimeiro; i++) {
@@ -367,7 +401,7 @@
         saldo = saldoComRend;
       }
 
-      for (let p = 1; p <= numParcelas; p++) {
+      for (let p = 1; p <= numParcelasGlobal; p++) {
         const saldoInicial = saldo;
         let saldoComRend = saldo;
         let rendimento = 0;
@@ -377,7 +411,7 @@
           rendimento = saldoComRend - saldoInicial;
         }
 
-        const parcelaPaga = Math.min(valorParcela, saldoComRend);
+        const parcelaPaga = Math.min(valorParcelaGlobal, saldoComRend);
         saldo = saldoComRend - parcelaPaga;
 
         monthlyData.push({ mes: mes++, saldoInicial, rendimento, saldoPosRend: saldoComRend, parcelaPaga, saldoFinal: saldo });
@@ -385,15 +419,9 @@
         if (saldo <= 0.01) break;
       }
 
-      const totalParcelas = valorParcela * numParcelas;
-      const valorQueSaiuDoBolso = Math.max(0, capitalInicial - saldo);
-      const economia = totalParcelas - valorQueSaiuDoBolso;
-      const percentualEconomia = totalParcelas > 0 ? (economia / totalParcelas) * 100 : 0;
+      totalParcelasGlobal = valorParcelaGlobal * numParcelasGlobal;
 
-      document.getElementById('capitalProprio').textContent = formatarMoeda(valorQueSaiuDoBolso);
-      document.getElementById('valorVista').textContent = formatarMoeda(totalParcelas);
-      document.getElementById('economia').textContent = formatarMoeda(Math.max(0, economia));
-      document.getElementById('percentualEconomia').textContent = percentualEconomia.toFixed(1) + "%";
+      atualizarResultados();
 
       const tbody = document.getElementById('corpoTabela');
       tbody.innerHTML = '';
@@ -414,15 +442,66 @@
       document.getElementById('resultado').classList.remove('hidden');
     }
 
+    function atualizarResultados() {
+      if (monthlyData.length === 0) return;
+
+      const comJuros = document.getElementById('comJuros').checked;
+      document.getElementById('labelSomaParcelas').innerHTML = 
+        `<i class="fas fa-receipt"></i> Soma das parcelas ${comJuros ? 'com' : 'sem'} juros - rendimento`;
+
+      const comDesconto = document.getElementById('comDesconto').checked;
+      document.getElementById('labelTotalVista').innerHTML = 
+        `<i class="fas fa-wallet"></i> Total a vista (valor a ser pago menos o desconto caso tenha desconto a vista)`;
+
+      const descontoPercent = comDesconto ? (parseFloat(document.getElementById('descontoVista').value) || 0) : 0;
+      const totalRendimento = monthlyData.reduce((sum, item) => sum + Math.abs(item.rendimento), 0);
+
+      const totalVista = capitalInicialGlobal * (1 - descontoPercent / 100);
+      const totalParceladoBruto = totalParcelasGlobal; // valor bruto usado no texto
+      const custoEfetivoParcelado = Math.max(0, totalParceladoBruto - totalRendimento); // efetivo = bruto - rendimento (simplificado para o texto)
+      const totalParceladoDisplay = custoEfetivoParcelado; // box mostra o custo efetivo real
+
+      document.getElementById('capitalProprio').textContent = formatarMoeda(totalVista);
+      document.getElementById('valorVista').textContent = formatarMoeda(totalParceladoDisplay);
+
+      const compensaVista = totalVista < custoEfetivoParcelado;
+      const diferenca = Math.abs(totalVista - custoEfetivoParcelado);
+
+      const statusEl = document.getElementById('statusRecomendacao');
+      if (compensaVista) {
+        statusEl.textContent = '✅ Compensa Pagar à Vista';
+        statusEl.className = 'text-4xl font-bold mb-4 leading-tight text-emerald-400';
+      } else {
+        statusEl.textContent = '✅ Compensa Parcelar';
+        statusEl.className = 'text-4xl font-bold mb-4 leading-tight text-teal-400';
+      }
+
+      let analiseHTML = `Você tem R$ ${capitalInicialGlobal.toLocaleString('pt-BR')} disponíveis. Sem desconto à vista, o total a vista é ${formatarMoeda(totalVista)}. `;
+
+      const temJuros = document.getElementById('comJuros').checked;
+      if (temJuros) {
+        analiseHTML += `Parcelando com juros, o total bruto seria ${formatarMoeda(totalParceladoBruto)} (${numParcelasGlobal}x de ${formatarMoeda(valorParcelaGlobal)}), mas com rendimento de ${formatarMoeda(totalRendimento)} o custo efetivo fica em ${formatarMoeda(custoEfetivoParcelado)}. `;
+      } else {
+        analiseHTML += `Parcelando sem juros, o total bruto é ${formatarMoeda(totalParceladoBruto)} (${numParcelasGlobal}x de ${formatarMoeda(valorParcelaGlobal)}), mas como você ganha ${formatarMoeda(totalRendimento)} de rendimento o custo efetivo fica em ${formatarMoeda(custoEfetivoParcelado)}. `;
+      }
+
+      analiseHTML += `<strong>Portanto, compensa ${compensaVista ? 'pagar à vista' : 'parcelar'}.</strong>`;
+
+      document.getElementById('analiseTexto').innerHTML = analiseHTML;
+    }
+
     // Eventos
     document.getElementById('capitalInicial').addEventListener('input', atualizarParcela);
     document.getElementById('numParcelas').addEventListener('input', atualizarParcela);
     document.getElementById('taxaJuros').addEventListener('input', atualizarParcela);
     document.getElementById('jurosAnual').addEventListener('change', atualizarParcela);
     document.getElementById('comJuros').addEventListener('change', toggleJuros);
+    document.getElementById('comDesconto').addEventListener('change', toggleDesconto);
+    document.getElementById('descontoVista').addEventListener('input', atualizarResultados);
 
     window.onload = () => {
       toggleJuros();
+      toggleDesconto();
       atualizarParcela();
     };
 
