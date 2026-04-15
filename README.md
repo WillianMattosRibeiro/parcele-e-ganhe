@@ -1,52 +1,53 @@
-# Calculadora de Juros Compostos com Saques
+# Compensa Parcelar ou Pagar à Vista?
 
-Uma calculadora moderna e interativa para simular **juros compostos com retiradas mensais** (parcelas).  
-Ideal para quem quer entender quanto realmente sai do bolso ao comprar parcelado enquanto o dinheiro restante rende.
+Uma calculadora moderna e interativa para simular **pagamento parcelado** (com juros opcionais) ou **à vista** (com desconto opcional), considerando o rendimento do dinheiro mantido na conta.  
+Ideal para decidir qual opção compensa mais financeiramente.
 
 ## ✨ Funcionalidades
 
-- Cálculo preciso de juros compostos mensais
-- Simulação mês a mês com detalhamento completo
-- Tabela transparente mostrando:
+- Simulação de parcelamento com ou sem juros
+- Opção de desconto à vista
+- Cálculo automático do valor das parcelas (com juros via fórmula Price)
+- Comparação entre total à vista e total parcelado efetivo
+- Análise recomendada: compensa parcelar ou pagar à vista?
+- Detalhamento mês a mês com tabela completa:
   - Saldo inicial
-  - Rendimento do mês
+  - Rendimento mensal
   - Saldo após rendimento
   - Parcela paga
   - Saldo final
-- Resultados resumidos:
-  - Valor que saiu do seu bolso (capital próprio)
-  - Valor total pago nas parcelas
-  - Economia gerada pelo rendimento
-  - Percentual de economia
-- Opção para parcelamento com ou sem juros
-- Possibilidade de atraso no primeiro pagamento (em meses)
-- Interface moderna, bonita e responsiva com tema dark
+- Possibilidade de atraso no primeiro pagamento
+- Taxa de juros mensal ou anual
+- Rentabilidade mensal do dinheiro
+- Interface moderna, responsiva com tema dark
 - Totalmente offline (arquivo único)
-- Seção de doações para apoiar o projeto
+- Seção de doações (PIX, Cardano, Bitcoin) para apoiar o projeto
 
 ## 🎯 Exemplo de Uso
 
 **Situação:**
-- Você tem R$ 1.000,00
-- Compra um produto de R$ 1.000,00 parcelado em **10x de R$ 100,00**
-- Enquanto paga as parcelas, o restante do dinheiro rende **1,15% ao mês**
+- Você tem R$ 1.000,00 disponíveis
+- Produto custa R$ 1.000,00
+- Opção 1: Pagar à vista com 5% de desconto
+- Opção 2: Parcelar em 10x sem juros, enquanto o dinheiro rende 1,15% ao mês
 
 **Resultado:**
-- Você descobre quanto realmente saiu do seu bolso (valor que saiu do bolso)
-- Quanto economizou graças ao rendimento
-- Evolução detalhada mês a mês
+- A calculadora mostra que compensa pagar à vista (economia de R$ 45,00)
+- Detalhamento mês a mês do saldo rendendo
+- Análise explicando a decisão
 
 ## 🖥️ Como usar
 
 1. Baixe o arquivo `index.html`
 2. Abra o arquivo diretamente no seu navegador (não precisa de servidor)
 3. Preencha os campos:
-    - Quanto você tinha disponível no início (valor inicial)
-    - Em quantas parcelas você vai pagar
-    - Quando será o primeiro pagamento
-    - Se o parcelamento tem juros e taxa de juros (mensal ou anual)
-    - Valor de cada parcela (calculado automaticamente se sem juros)
-    - Quanto rende seu dinheiro por mês (%)
+    - Valor a ser pago (preço do produto)
+    - Em quantas parcelas dividir o pagamento
+    - Quando começa o pagamento (primeira parcela)
+    - Se o parcelamento inclui juros e taxa de juros (mensal ou anual)
+    - Se há desconto no pagamento à vista e percentual
+    - Valor de cada parcela mensal (calculado automaticamente)
+    - Rentabilidade mensal do seu dinheiro (%)
 4. Clique em **"Calcular quanto eu realmente vou gastar"**
 
 ## 📁 Estrutura do Projeto
@@ -81,5 +82,3 @@ Este projeto está sob a licença **MIT** — fique à vontade para usar, modifi
 **Feito com ❤️ para ajudar as pessoas a tomarem decisões financeiras mais conscientes.**
 
 Qualquer dúvida ou sugestão, abra uma Issue!
-
-Quer que eu faça uma versão mais curta ou mais técnica? Posso ajustar conforme seu estilo.
