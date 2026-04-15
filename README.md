@@ -3,6 +3,10 @@
 Uma calculadora moderna e interativa para simular **pagamento parcelado** (com juros opcionais) ou **à vista** (com desconto opcional), considerando o rendimento do dinheiro mantido na conta.  
 Ideal para decidir qual opção compensa mais financeiramente.
 
+## 🌐 Acesse Online
+
+Use diretamente no navegador: [Calculadora Online](https://willianmattosribeiro.github.io/parcele-e-ganhe/)
+
 ## ✨ Funcionalidades
 
 - Simulação de parcelamento com ou sem juros
