@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Juros Compostos com Saques</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      transition: all 0.2s ease;
+    }
+    tr:hover {
+      background-color: rgba(16, 185, 129, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-white">
+  <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-bold mb-2">📈 Calculadora de Juros Compostos com Saques</h1>
+      <p class="text-slate-400">Descubra quanto você realmente gastou do seu bolso usando rendimento enquanto paga parcelas</p>
+    </div>
+
+    <div class="card rounded-3xl shadow-2xl p-8 border border-white/10">
+      <form id="form" class="space-y-8">
+
+        <!-- Valor Inicial -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Valor Inicial (Capital Inicial)</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
+            <input type="number" id="capitalInicial" value="1000" 
+                   class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-12 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+          </div>
+        </div>
+
+        <!-- Valor da Parcela -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Valor de cada Parcela</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
+            <input type="number" id="valorParcela" value="100" 
+                   class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-12 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+          </div>
+        </div>
+
+        <!-- Quantidade de Parcelas -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Número de Parcelas</label>
+          <input type="number" id="numParcelas" value="10" 
+                 class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <!-- Taxa de Rentabilidade -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Taxa de Rentabilidade Mensal (%)</label>
+          <div class="relative">
+            <input type="number" id="taxaMensal" value="1.0" step="0.01" 
+                   class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+            <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+          </div>
+        </div>
+
+        <button type="button" onclick="calcular()"
+                class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold text-xl py-5 rounded-2xl transition transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2">
+          <i class="fas fa-calculator"></i>
+          Calcular Agora
+        </button>
+      </form>
+
+      <!-- Resultados -->
+      <div id="resultado" class="hidden mt-10">
+
+        <!-- Cards de Resumo -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-slate-900/70 rounded-2xl p-6 border border-emerald-500/30">
+            <p class="text-slate-400 text-sm flex items-center gap-2">
+              <i class="fas fa-wallet"></i>
+              Capital Próprio Utilizado
+            </p>
+            <p id="capitalProprio" class="text-4xl font-bold text-emerald-400 mt-2">R$ 0,00</p>
+            <p class="text-xs text-slate-500 mt-1">Valor real que saiu do seu bolso</p>
+          </div>
+
+          <div class="bg-slate-900/70 rounded-2xl p-6 border border-amber-500/30">
+            <p class="text-slate-400 text-sm flex items-center gap-2">
+              <i class="fas fa-credit-card"></i>
+              Valor se pago à vista
+            </p>
+            <p id="valorVista" class="text-4xl font-bold text-amber-400 mt-2">R$ 0,00</p>
+            <p class="text-xs text-slate-500 mt-1">Total das parcelas sem rendimento</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/70 rounded-2xl p-6 mb-8">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-slate-400 text-sm">Economia graças ao rendimento</p>
+              <p id="economia" class="text-3xl font-bold text-emerald-400">R$ 0,00</p>
+            </div>
+            <div class="text-right">
+              <p class="text-slate-400 text-sm">Percentual de Economia</p>
+              <p id="percentualEconomia" class="text-3xl font-bold text-emerald-400">0%</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela Mês a Mês -->
+        <div class="mt-8">
+          <h2 class="text-2xl font-semibold mb-4 flex items-center gap-3">
+            <i class="fas fa-list-ol text-emerald-400"></i>
+            Simulação Mês a Mês (Racional Completo)
+          </h2>
+          <div class="bg-slate-900/70 rounded-2xl overflow-hidden border border-white/10">
+            <div class="max-h-96 overflow-auto">
+              <table id="tabelaMeses" class="w-full text-sm">
+                <thead class="bg-slate-800 sticky top-0">
+                  <tr>
+                    <th class="px-6 py-4 text-left font-medium text-slate-300">Mês</th>
+                    <th class="px-6 py-4 text-right font-medium text-slate-300">Saldo Inicial</th>
+                    <th class="px-6 py-4 text-right font-medium text-emerald-400">Rendimento</th>
+                    <th class="px-6 py-4 text-right font-medium text-slate-300">Saldo após Rendimento</th>
+                    <th class="px-6 py-4 text-right font-medium text-amber-400">Parcela Paga</th>
+                    <th class="px-6 py-4 text-right font-medium text-slate-300">Saldo Final</th>
+                  </tr>
+                </thead>
+                <tbody id="corpoTabela" class="divide-y divide-slate-700 text-slate-100">
+                  <!-- Preenchido via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500 text-center mt-3">
+            Cada mês o saldo rende <strong>antes</strong> de pagar a parcela. Valores arredondados para 2 casas decimais.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="text-center text-slate-500 text-sm mt-8">
+      Exemplo: Comecei com R$ 1.000 e comprei algo de R$ 1.000 parcelado em 10x de R$ 100
+    </div>
+  </div>
+
+  <script>
+    function formatarMoeda(valor) {
+      return valor.toLocaleString('pt-BR', { 
+        style: 'currency', 
+        currency: 'BRL',
+        minimumFractionDigits: 2 
+      });
+    }
+
+    function calcular() {
+      const capitalInicial = parseFloat(document.getElementById('capitalInicial').value) || 0;
+      const valorParcela = parseFloat(document.getElementById('valorParcela').value) || 0;
+      const numParcelas = parseInt(document.getElementById('numParcelas').value) || 0;
+      let taxaMensal = parseFloat(document.getElementById('taxaMensal').value) || 0;
+
+      if (capitalInicial <= 0 || valorParcela <= 0 || numParcelas <= 0 || taxaMensal < 0) {
+        alert("Por favor, preencha todos os campos com valores válidos.");
+        return;
+      }
+
+      taxaMensal = taxaMensal / 100; // converter %
+
+      let saldo = capitalInicial;
+      let totalPago = 0;
+      const monthlyData = [];
+
+      for (let mes = 1; mes <= numParcelas; mes++) {
+        const saldoInicial = saldo;
+        const saldoPosRend = saldo * (1 + taxaMensal);
+        const rendimento = saldoPosRend - saldoInicial;
+
+        const parcelaPaga = Math.min(valorParcela, saldoPosRend);
+        
+        saldo = saldoPosRend - parcelaPaga;
+        totalPago += parcelaPaga;
+
+        monthlyData.push({
+          mes,
+          saldoInicial,
+          rendimento,
+          saldoPosRend,
+          parcelaPaga,
+          saldoFinal: saldo
+        });
+
+        // Se o saldo zerou, não continua gerando rendimento (mas mostra as linhas restantes com zero)
+        if (saldo <= 0.01) {
+          saldo = 0;
+          break;
+        }
+      }
+
+      const valorVista = valorParcela * numParcelas;
+      const capitalProprio = Math.max(0, capitalInicial - saldo); // quanto realmente saiu do bolso
+      const economia = valorVista - capitalProprio;
+      const percentualEconomia = valorVista > 0 ? Math.max(0, (economia / valorVista) * 100) : 0;
+
+      // Preenche cards de resumo
+      document.getElementById('capitalProprio').textContent = formatarMoeda(capitalProprio);
+      document.getElementById('valorVista').textContent = formatarMoeda(valorVista);
+      document.getElementById('economia').textContent = formatarMoeda(economia);
+      document.getElementById('percentualEconomia').textContent = percentualEconomia.toFixed(1) + "%";
+
+      // Gera tabela mês a mês
+      const tbody = document.getElementById('corpoTabela');
+      tbody.innerHTML = '';
+
+      monthlyData.forEach(item => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-emerald-900/30';
+        row.innerHTML = `
+          <td class="px-6 py-4 font-medium">${item.mes}</td>
+          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoInicial)}</td>
+          <td class="px-6 py-4 text-right font-medium text-emerald-400">+ ${formatarMoeda(item.rendimento)}</td>
+          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoPosRend)}</td>
+          <td class="px-6 py-4 text-right font-medium text-amber-400">${formatarMoeda(item.parcelaPaga)}</td>
+          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoFinal)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Mostra o resultado
+      document.getElementById('resultado').classList.remove('hidden');
+    }
+
+    // Calcular com Enter
+    document.getElementById('form').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        calcular();
+      }
+    });
+  </script>
+</body>
+</html>
