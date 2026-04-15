@@ -15,14 +15,14 @@
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(12px);
     }
-    table {
-      border-collapse: collapse;
-    }
-    th, td {
-      transition: all 0.2s ease;
-    }
-    tr:hover {
-      background-color: rgba(16, 185, 129, 0.1);
+    table { border-collapse: collapse; }
+    th, td { transition: all 0.2s ease; }
+    tr:hover { background-color: rgba(16, 185, 129, 0.1); }
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -36,38 +36,63 @@
     <div class="card rounded-3xl shadow-2xl p-8 border border-white/10">
       <form id="form" class="space-y-8">
 
-        <!-- Valor Inicial -->
+        <!-- 1. Valor Inicial -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">Valor Inicial (Capital Inicial)</label>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
-            <input type="number" id="capitalInicial" value="1000" 
+            <input type="number" id="capitalInicial" value="1000" step="0.01"
                    class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-12 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
           </div>
         </div>
 
-        <!-- Valor da Parcela -->
+        <!-- 2. Número de Parcelas -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">Número de Parcelas</label>
+          <input type="number" id="numParcelas" value="10" min="1"
+                 class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+        </div>
+
+        <!-- 3. Tipo de Parcela + Valor da Parcela -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Tipo de Parcelamento</label>
+            <div class="flex items-center gap-3">
+              <span id="labelSemJuros" class="font-medium text-emerald-400">Sem Juros</span>
+              <label class="switch">
+                <input type="checkbox" id="comJuros" class="peer sr-only" onchange="atualizarParcela()">
+                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500 rounded-full peer peer-checked:bg-amber-500"></div>
+                <div class="dot absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition peer-checked:translate-x-5"></div>
+              </label>
+              <span id="labelComJuros" class="font-medium text-slate-400">Com Juros</span>
+            </div>
+          </div>
+
+          <div id="campoJuros" class="hidden">
+            <label class="block text-sm font-medium text-slate-300 mb-2">Taxa de Juros do Parcelamento (%)</label>
+            <div class="relative">
+              <input type="number" id="taxaJurosParcelado" value="9" step="0.01"
+                     class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-amber-500 transition">
+              <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Valor de cada Parcela -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">Valor de cada Parcela</label>
           <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-400">R$</span>
-            <input type="number" id="valorParcela" value="100" 
+            <input type="number" id="valorParcela" step="0.01"
                    class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-12 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
           </div>
-        </div>
-
-        <!-- Quantidade de Parcelas -->
-        <div>
-          <label class="block text-sm font-medium text-slate-300 mb-2">Número de Parcelas</label>
-          <input type="number" id="numParcelas" value="10" 
-                 class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
         </div>
 
         <!-- Taxa de Rentabilidade -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">Taxa de Rentabilidade Mensal (%)</label>
           <div class="relative">
-            <input type="number" id="taxaMensal" value="1.0" step="0.01" 
+            <input type="number" id="taxaMensal" value="1.0" step="0.01"
                    class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
             <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">%</span>
           </div>
@@ -80,27 +105,16 @@
         </button>
       </form>
 
-      <!-- Resultados -->
+      <!-- Resultados (mantido igual) -->
       <div id="resultado" class="hidden mt-10">
-
-        <!-- Cards de Resumo -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div class="bg-slate-900/70 rounded-2xl p-6 border border-emerald-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2">
-              <i class="fas fa-wallet"></i>
-              Capital Próprio Utilizado
-            </p>
+            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-wallet"></i> Capital Próprio Utilizado</p>
             <p id="capitalProprio" class="text-4xl font-bold text-emerald-400 mt-2">R$ 0,00</p>
-            <p class="text-xs text-slate-500 mt-1">Valor real que saiu do seu bolso</p>
           </div>
-
           <div class="bg-slate-900/70 rounded-2xl p-6 border border-amber-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2">
-              <i class="fas fa-credit-card"></i>
-              Valor se pago à vista
-            </p>
+            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-credit-card"></i> Valor se pago à vista</p>
             <p id="valorVista" class="text-4xl font-bold text-amber-400 mt-2">R$ 0,00</p>
-            <p class="text-xs text-slate-500 mt-1">Total das parcelas sem rendimento</p>
           </div>
         </div>
 
@@ -136,32 +150,50 @@
                     <th class="px-6 py-4 text-right font-medium text-slate-300">Saldo Final</th>
                   </tr>
                 </thead>
-                <tbody id="corpoTabela" class="divide-y divide-slate-700 text-slate-100">
-                  <!-- Preenchido via JavaScript -->
-                </tbody>
+                <tbody id="corpoTabela" class="divide-y divide-slate-700 text-slate-100"></tbody>
               </table>
             </div>
           </div>
-          <p class="text-xs text-slate-500 text-center mt-3">
-            Cada mês o saldo rende <strong>antes</strong> de pagar a parcela. Valores arredondados para 2 casas decimais.
-          </p>
         </div>
-
       </div>
-    </div>
-
-    <div class="text-center text-slate-500 text-sm mt-8">
-      Exemplo: Comecei com R$ 1.000 e comprei algo de R$ 1.000 parcelado em 10x de R$ 100
     </div>
   </div>
 
   <script>
     function formatarMoeda(valor) {
-      return valor.toLocaleString('pt-BR', { 
-        style: 'currency', 
+      return valor.toLocaleString('pt-BR', {
+        style: 'currency',
         currency: 'BRL',
-        minimumFractionDigits: 2 
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       });
+    }
+
+    // Atualiza o valor da parcela automaticamente
+    function atualizarParcela() {
+      const capital = parseFloat(document.getElementById('capitalInicial').value) || 0;
+      const numParcelas = parseInt(document.getElementById('numParcelas').value) || 1;
+      const comJuros = document.getElementById('comJuros').checked;
+      const valorParcelaInput = document.getElementById('valorParcela');
+
+      if (capital <= 0 || numParcelas <= 0) return;
+
+      if (!comJuros) {
+        // Sem juros → parcela = capital / parcelas
+        const valor = capital / numParcelas;
+        valorParcelaInput.value = valor.toFixed(2);
+      } else {
+        // Com juros → calcula parcela com juros compostos
+        const taxaJuros = (parseFloat(document.getElementById('taxaJurosParcelado').value) || 9) / 100;
+        if (taxaJuros === 0) {
+          valorParcelaInput.value = (capital / numParcelas).toFixed(2);
+        } else {
+          // Fórmula de prestação (PMT)
+          const parcela = capital * (taxaJuros * Math.pow(1 + taxaJuros, numParcelas)) / 
+                         (Math.pow(1 + taxaJuros, numParcelas) - 1);
+          valorParcelaInput.value = parcela.toFixed(2);
+        }
+      }
     }
 
     function calcular() {
@@ -175,10 +207,9 @@
         return;
       }
 
-      taxaMensal = taxaMensal / 100; // converter %
+      taxaMensal = taxaMensal / 100;
 
       let saldo = capitalInicial;
-      let totalPago = 0;
       const monthlyData = [];
 
       for (let mes = 1; mes <= numParcelas; mes++) {
@@ -187,9 +218,7 @@
         const rendimento = saldoPosRend - saldoInicial;
 
         const parcelaPaga = Math.min(valorParcela, saldoPosRend);
-        
         saldo = saldoPosRend - parcelaPaga;
-        totalPago += parcelaPaga;
 
         monthlyData.push({
           mes,
@@ -200,7 +229,6 @@
           saldoFinal: saldo
         });
 
-        // Se o saldo zerou, não continua gerando rendimento (mas mostra as linhas restantes com zero)
         if (saldo <= 0.01) {
           saldo = 0;
           break;
@@ -208,37 +236,44 @@
       }
 
       const valorVista = valorParcela * numParcelas;
-      const capitalProprio = Math.max(0, capitalInicial - saldo); // quanto realmente saiu do bolso
+      const capitalProprio = Math.max(0, capitalInicial - saldo);
       const economia = valorVista - capitalProprio;
       const percentualEconomia = valorVista > 0 ? Math.max(0, (economia / valorVista) * 100) : 0;
 
-      // Preenche cards de resumo
+      // Preenche resultados
       document.getElementById('capitalProprio').textContent = formatarMoeda(capitalProprio);
       document.getElementById('valorVista').textContent = formatarMoeda(valorVista);
       document.getElementById('economia').textContent = formatarMoeda(economia);
       document.getElementById('percentualEconomia').textContent = percentualEconomia.toFixed(1) + "%";
 
-      // Gera tabela mês a mês
+      // Preenche tabela
       const tbody = document.getElementById('corpoTabela');
       tbody.innerHTML = '';
-
       monthlyData.forEach(item => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-emerald-900/30';
         row.innerHTML = `
           <td class="px-6 py-4 font-medium">${item.mes}</td>
-          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoInicial)}</td>
-          <td class="px-6 py-4 text-right font-medium text-emerald-400">+ ${formatarMoeda(item.rendimento)}</td>
-          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoPosRend)}</td>
-          <td class="px-6 py-4 text-right font-medium text-amber-400">${formatarMoeda(item.parcelaPaga)}</td>
-          <td class="px-6 py-4 text-right font-medium">${formatarMoeda(item.saldoFinal)}</td>
+          <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoInicial)}</td>
+          <td class="px-6 py-4 text-right text-emerald-400">+ ${formatarMoeda(item.rendimento)}</td>
+          <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoPosRend)}</td>
+          <td class="px-6 py-4 text-right text-amber-400">${formatarMoeda(item.parcelaPaga)}</td>
+          <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoFinal)}</td>
         `;
         tbody.appendChild(row);
       });
 
-      // Mostra o resultado
       document.getElementById('resultado').classList.remove('hidden');
     }
+
+    // Eventos para atualizar parcela automaticamente
+    document.getElementById('capitalInicial').addEventListener('input', atualizarParcela);
+    document.getElementById('numParcelas').addEventListener('input', atualizarParcela);
+    document.getElementById('taxaJurosParcelado').addEventListener('input', atualizarParcela);
+    document.getElementById('comJuros').addEventListener('change', () => {
+      document.getElementById('campoJuros').classList.toggle('hidden', !document.getElementById('comJuros').checked);
+      atualizarParcela();
+    });
 
     // Calcular com Enter
     document.getElementById('form').addEventListener('keypress', function(e) {
@@ -247,6 +282,11 @@
         calcular();
       }
     });
+
+    // Inicializa com valor padrão
+    window.onload = () => {
+      atualizarParcela();
+    };
   </script>
 </body>
 </html>
