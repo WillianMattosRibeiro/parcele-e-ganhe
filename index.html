@@ -18,7 +18,6 @@
     table { border-collapse: collapse; }
     th, td { transition: all 0.2s ease; }
     tr:hover { background-color: rgba(16, 185, 129, 0.1); }
-
     .toggle-label {
       font-size: 0.875rem;
       font-weight: 500;
@@ -36,7 +35,7 @@
     <div class="card rounded-3xl shadow-2xl p-8 border border-white/10">
       <form id="form" class="space-y-8">
 
-        <!-- 1. Valor Inicial -->
+        <!-- Valor Inicial -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
             <i class="fas fa-coins mr-2"></i> Quanto você tinha disponível no início?
@@ -48,7 +47,7 @@
           </div>
         </div>
 
-        <!-- 2. Número de Parcelas -->
+        <!-- Número de Parcelas -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
             <i class="fas fa-calendar-alt mr-2"></i> Em quantas parcelas você vai pagar?
@@ -57,7 +56,21 @@
                  class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
         </div>
 
-        <!-- 3. Tipo de Parcelamento -->
+        <!-- Quando será o primeiro pagamento -->
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-2">
+            <i class="fas fa-hourglass-half mr-2"></i> Quando será o primeiro pagamento?
+          </label>
+          <select id="mesesPrimeiroPagamento" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
+            <option value="0" selected>Hoje - Primeira parcela ainda neste mês</option>
+            <option value="1">Em 30 dias</option>
+            <option value="2">Em 60 dias</option>
+            <option value="3">Em 90 dias</option>
+            <option value="4">Em 120 dias</option>
+          </select>
+        </div>
+
+        <!-- Tipo de Parcelamento -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-slate-300 mb-2">O parcelamento tem juros?</label>
@@ -72,24 +85,17 @@
             </div>
           </div>
 
-          <!-- Seção de Juros -->
           <div id="secaoJuros" class="hidden">
             <label class="block text-sm font-medium text-slate-300 mb-3">Taxa de juros do parcelamento</label>
-            
-            <div class="flex items-center gap-4">
-              <label class="relative inline-flex items-center cursor-pointer">
+            <div class="flex items-center justify-between bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4">
+              <span id="labelMensal" class="toggle-label text-emerald-400">Mensal</span>
+              <label class="relative inline-flex items-center cursor-pointer mx-4">
                 <input type="checkbox" id="jurosAnual" class="sr-only peer" onchange="atualizarParcela()">
                 <div class="w-12 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-500 rounded-full peer peer-checked:bg-teal-500"></div>
                 <div class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition peer-checked:translate-x-6"></div>
               </label>
-
-              <div class="flex-1 flex justify-between text-sm">
-                <span id="labelMensal" class="toggle-label text-emerald-400">Mensal</span>
-                <span class="text-slate-500">|</span>
-                <span id="labelAnual" class="toggle-label text-slate-400">Anual</span>
-              </div>
+              <span id="labelAnual" class="toggle-label text-slate-400">Anual</span>
             </div>
-
             <div class="mt-4 relative">
               <input type="number" id="taxaJuros" value="9" step="0.01"
                      class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-amber-500 transition">
@@ -98,7 +104,7 @@
           </div>
         </div>
 
-        <!-- Valor de cada Parcela -->
+        <!-- Valor da Parcela -->
         <div>
           <label class="block text-sm font-medium text-slate-300 mb-2">
             <i class="fas fa-receipt mr-2"></i> Valor de cada parcela
@@ -116,7 +122,7 @@
             <i class="fas fa-chart-line mr-2"></i> Quanto rende seu dinheiro por mês?
           </label>
           <div class="relative">
-            <input type="number" id="taxaMensal" value="1.0" step="0.01"
+            <input type="number" id="taxaMensal" value="1.15" step="0.01"
                    class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-4 text-xl focus:outline-none focus:border-emerald-500 transition">
             <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">%</span>
           </div>
@@ -129,31 +135,23 @@
         </button>
       </form>
 
-      <!-- ====================== RESULTADOS ====================== -->
+      <!-- Resultados -->
       <div id="resultado" class="hidden mt-12">
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div class="bg-slate-900/70 rounded-2xl p-6 border border-emerald-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2">
-              <i class="fas fa-wallet"></i> Valor que saiu do seu bolso
-            </p>
+            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-wallet"></i> Valor que saiu do seu bolso</p>
             <p id="capitalProprio" class="text-4xl font-bold text-emerald-400 mt-2">R$ 0,00</p>
-            <p class="text-xs text-slate-500 mt-2">É o quanto você realmente precisou usar do seu dinheiro inicial</p>
           </div>
-
           <div class="bg-slate-900/70 rounded-2xl p-6 border border-amber-500/30">
-            <p class="text-slate-400 text-sm flex items-center gap-2">
-              <i class="fas fa-receipt"></i> Total pago nas parcelas
-            </p>
+            <p class="text-slate-400 text-sm flex items-center gap-2"><i class="fas fa-receipt"></i> Total pago nas parcelas</p>
             <p id="valorVista" class="text-4xl font-bold text-amber-400 mt-2">R$ 0,00</p>
-            <p class="text-xs text-slate-500 mt-2">Soma de todas as parcelas que você vai pagar</p>
           </div>
         </div>
 
         <div class="bg-gradient-to-r from-emerald-900/40 to-teal-900/40 rounded-2xl p-6 mb-8 border border-emerald-500/20">
           <div class="flex justify-between items-center">
             <div>
-              <p class="text-emerald-300 text-sm font-medium">Economia graças ao rendimento</p>
+              <p class="text-emerald-300 text-sm font-medium">Economia gerada pelo rendimento</p>
               <p id="economia" class="text-4xl font-bold text-emerald-400">R$ 0,00</p>
             </div>
             <div class="text-right">
@@ -161,14 +159,12 @@
               <p id="percentualEconomia" class="text-4xl font-bold text-emerald-400">0%</p>
             </div>
           </div>
-          <p class="text-xs text-emerald-400/80 mt-3">Quanto você economizou por deixar o dinheiro rendendo enquanto pagava as parcelas</p>
         </div>
 
-        <!-- Tabela Mês a Mês -->
+        <!-- Tabela -->
         <div class="mt-10">
-          <h2 class="text-2xl font-semibold mb-5 flex items-center gap-3 text-white">
-            <i class="fas fa-list-ol text-emerald-400"></i>
-            Detalhamento mês a mês
+          <h2 class="text-2xl font-semibold mb-5 flex items-center gap-3">
+            <i class="fas fa-list-ol text-emerald-400"></i> Detalhamento mês a mês
           </h2>
           <div class="bg-slate-900/70 rounded-2xl overflow-hidden border border-white/10">
             <div class="max-h-96 overflow-auto">
@@ -187,21 +183,44 @@
               </table>
             </div>
           </div>
-          <p class="text-xs text-slate-500 text-center mt-4">
-            Cada mês o saldo rende <strong>antes</strong> de pagar a parcela. Todos os valores estão arredondados para 2 casas decimais.
+
+          <!-- Explicação didática -->
+          <p class="text-xs text-slate-400 text-center mt-6 leading-relaxed">
+            <strong>Observação:</strong> O rendimento só começa a ser aplicado a partir do <strong>segundo mês</strong>.<br>
+            Isso acontece porque, na prática, o primeiro mês serve para fechar o ciclo de aproximadamente 30 dias de rendimento. 
+            Ou seja: você recebe o rendimento no final do mês 1 (ou início do mês 2), e só então o saldo atualizado é usado para pagar a parcela.
           </p>
         </div>
       </div>
     </div>
 
-    <div class="text-center text-slate-500 text-sm mt-10">
-      Exemplo: Você tinha R$ 1.000 e comprou algo parcelado em 10x de R$ 100
+    <!-- Rodapé com doação -->
+    <div class="mt-16 text-center">
+      <p class="text-slate-400 text-sm mb-4">Gostou da calculadora?</p>
+      <p class="text-emerald-400 font-medium text-lg mb-6">Me ajude a comprar um cafézinho! ☕</p>
+      
+      <div class="bg-slate-900/70 rounded-2xl p-6 max-w-md mx-auto">
+        <div class="space-y-4 text-left text-sm">
+          <div>
+            <span class="text-emerald-400 font-medium">PIX:</span><br>
+            <span class="text-slate-300 break-all">cc08b2b9-cf0c-4659-9d92-206676ec944d</span>
+          </div>
+          <div>
+            <span class="text-emerald-400 font-medium">Cardano (ADA):</span><br>
+            <span class="text-slate-300 break-all text-xs">addr1qy0ha7qskhwxa3feyt4306gs5axrkdpmjytu282v4jpvmzy9cw5vfpc5dsfhkl4azcr73qkldm6rshtlvjkwhd9j08qqafh87l</span>
+          </div>
+          <div>
+            <span class="text-emerald-400 font-medium">Bitcoin (BTC):</span><br>
+            <span class="text-slate-300 break-all text-xs">bc1q273hzqgx4ju9q52daezcn0ha49wx5wzwzu9gq8</span>
+          </div>
+        </div>
+      </div>
+      
+      <p class="text-slate-500 text-xs mt-8">Obrigado pelo apoio! ❤️</p>
     </div>
   </div>
 
   <script>
-    // ... (o JavaScript permanece exatamente igual à versão anterior)
-
     function formatarMoeda(valor) {
       return valor.toLocaleString('pt-BR', {
         style: 'currency',
@@ -248,19 +267,14 @@
         valorParcelaInput.value = parcela.toFixed(2);
       }
 
-      // Atualiza visual das labels Mensal / Anual
       const labelMensal = document.getElementById('labelMensal');
       const labelAnual = document.getElementById('labelAnual');
       if (isAnual) {
-        labelMensal.classList.remove('text-emerald-400');
-        labelMensal.classList.add('text-slate-400');
-        labelAnual.classList.remove('text-slate-400');
-        labelAnual.classList.add('text-emerald-400');
+        labelMensal.classList.remove('text-emerald-400'); labelMensal.classList.add('text-slate-400');
+        labelAnual.classList.remove('text-slate-400'); labelAnual.classList.add('text-emerald-400');
       } else {
-        labelMensal.classList.remove('text-slate-400');
-        labelMensal.classList.add('text-emerald-400');
-        labelAnual.classList.remove('text-emerald-400');
-        labelAnual.classList.add('text-slate-400');
+        labelMensal.classList.remove('text-slate-400'); labelMensal.classList.add('text-emerald-400');
+        labelAnual.classList.remove('text-emerald-400'); labelAnual.classList.add('text-slate-400');
       }
     }
 
@@ -268,31 +282,56 @@
       const capitalInicial = parseFloat(document.getElementById('capitalInicial').value) || 0;
       const valorParcela = parseFloat(document.getElementById('valorParcela').value) || 0;
       const numParcelas = parseInt(document.getElementById('numParcelas').value) || 0;
-      let taxaRendimentoMensal = parseFloat(document.getElementById('taxaMensal').value) || 0;
+      const mesesAtePrimeiro = parseInt(document.getElementById('mesesPrimeiroPagamento').value) || 0;
+      let taxaRendimento = parseFloat(document.getElementById('taxaMensal').value) || 0;
 
-      if (capitalInicial <= 0 || valorParcela <= 0 || numParcelas <= 0 || taxaRendimentoMensal < 0) {
+      if (capitalInicial <= 0 || valorParcela <= 0 || numParcelas <= 0) {
         alert("Por favor, preencha todos os campos com valores válidos.");
         return;
       }
 
-      taxaRendimentoMensal = taxaRendimentoMensal / 100;
-
+      taxaRendimento = taxaRendimento / 100;
       let saldo = capitalInicial;
       const monthlyData = [];
+      let mes = 1;
 
-      for (let mes = 1; mes <= numParcelas; mes++) {
+      // Período inicial de rendimento (antes da primeira parcela)
+      for (let i = 0; i < mesesAtePrimeiro; i++) {
         const saldoInicial = saldo;
-        const saldoPosRend = saldo * (1 + taxaRendimentoMensal);
-        const rendimento = saldoPosRend - saldoInicial;
-
-        const parcelaPaga = Math.min(valorParcela, saldoPosRend);
-        saldo = saldoPosRend - parcelaPaga;
+        const saldoComRend = saldo * (1 + taxaRendimento);
+        const rendimento = saldoComRend - saldoInicial;
 
         monthlyData.push({
-          mes,
+          mes: mes++,
           saldoInicial,
           rendimento,
-          saldoPosRend,
+          saldoPosRend: saldoComRend,
+          parcelaPaga: 0,
+          saldoFinal: saldoComRend
+        });
+        saldo = saldoComRend;
+      }
+
+      // Pagamento das parcelas (rendimento começa a partir do 2º mês)
+      for (let p = 1; p <= numParcelas; p++) {
+        const saldoInicial = saldo;
+        let saldoComRend = saldo;
+        let rendimento = 0;
+
+        // Rendimento só a partir do segundo mês
+        if (mes >= 2) {
+          saldoComRend = saldo * (1 + taxaRendimento);
+          rendimento = saldoComRend - saldoInicial;
+        }
+
+        const parcelaPaga = Math.min(valorParcela, saldoComRend);
+        saldo = saldoComRend - parcelaPaga;
+
+        monthlyData.push({
+          mes: mes++,
+          saldoInicial,
+          rendimento,
+          saldoPosRend: saldoComRend,
           parcelaPaga,
           saldoFinal: saldo
         });
@@ -306,11 +345,11 @@
       const totalParcelas = valorParcela * numParcelas;
       const valorQueSaiuDoBolso = Math.max(0, capitalInicial - saldo);
       const economia = totalParcelas - valorQueSaiuDoBolso;
-      const percentualEconomia = totalParcelas > 0 ? Math.max(0, (economia / totalParcelas) * 100) : 0;
+      const percentualEconomia = totalParcelas > 0 ? (economia / totalParcelas) * 100 : 0;
 
       document.getElementById('capitalProprio').textContent = formatarMoeda(valorQueSaiuDoBolso);
       document.getElementById('valorVista').textContent = formatarMoeda(totalParcelas);
-      document.getElementById('economia').textContent = formatarMoeda(economia);
+      document.getElementById('economia').textContent = formatarMoeda(Math.max(0, economia));
       document.getElementById('percentualEconomia').textContent = percentualEconomia.toFixed(1) + "%";
 
       const tbody = document.getElementById('corpoTabela');
@@ -321,9 +360,13 @@
         row.innerHTML = `
           <td class="px-6 py-4 font-medium">${item.mes}</td>
           <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoInicial)}</td>
-          <td class="px-6 py-4 text-right text-emerald-400">+ ${formatarMoeda(item.rendimento)}</td>
+          <td class="px-6 py-4 text-right ${item.rendimento > 0 ? 'text-emerald-400' : 'text-slate-500'}">
+            ${item.rendimento > 0 ? '+ ' : ''}${formatarMoeda(item.rendimento)}
+          </td>
           <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoPosRend)}</td>
-          <td class="px-6 py-4 text-right text-amber-400">${formatarMoeda(item.parcelaPaga)}</td>
+          <td class="px-6 py-4 text-right ${item.parcelaPaga > 0 ? 'text-amber-400' : 'text-slate-500'}">
+            ${item.parcelaPaga > 0 ? formatarMoeda(item.parcelaPaga) : '-'}
+          </td>
           <td class="px-6 py-4 text-right">${formatarMoeda(item.saldoFinal)}</td>
         `;
         tbody.appendChild(row);
@@ -332,7 +375,7 @@
       document.getElementById('resultado').classList.remove('hidden');
     }
 
-    // Eventos de atualização automática
+    // Eventos
     document.getElementById('capitalInicial').addEventListener('input', atualizarParcela);
     document.getElementById('numParcelas').addEventListener('input', atualizarParcela);
     document.getElementById('taxaJuros').addEventListener('input', atualizarParcela);
