@@ -3,7 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compensa Parcelar ou Pagar á Vista?</title>
+  <title>Compensa Parcelar ou Pagar á Vista? - Calculadora Financeira Gratuita</title>
+  <meta name="description" content="Simule se compensa parcelar com juros ou pagar à vista com desconto, considerando o rendimento do seu dinheiro. Calculadora gratuita online para decisões financeiras conscientes.">
+  <meta name="keywords" content="parcelar ou pagar à vista, calculadora juros, rendimento dinheiro, decisão financeira, simulador parcelamento, economia financeira, juros compostos">
+  <meta name="author" content="Desenvolvedor Anônimo">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="pt-BR">
+  <link rel="canonical" href="https://github.com/WillianMattosRibeiro/parcele-e-ganhe">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Compensa Parcelar ou Pagar à Vista? - Calculadora Financeira">
+  <meta property="og:description" content="Descubra se compensa parcelar com juros ou pagar à vista considerando o rendimento do dinheiro. Ferramenta gratuita online.">
+  <meta property="og:url" content="https://github.com/WillianMattosRibeiro/parcele-e-ganhe">
+  <meta property="og:site_name" content="Parcele e Ganhe">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Compensa Parcelar ou Pagar à Vista?">
+  <meta name="twitter:description" content="Simulador financeiro para decidir entre parcelar ou pagar à vista. Gratuito e online.">
+  <meta name="twitter:site" content="@username">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculadora: Compensa Parcelar ou Pagar à Vista?",
+    "description": "Ferramenta online gratuita para simular se compensa parcelar com juros ou pagar à vista com desconto, levando em conta o rendimento mensal do dinheiro.",
+    "url": "https://github.com/WillianMattosRibeiro/parcele-e-ganhe",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Desenvolvedor Anônimo"
+    },
+    "datePublished": "2024-01-01",
+    "inLanguage": "pt-BR",
+    "potentialAction": {
+      "@type": "UseAction",
+      "target": "https://github.com/username/parcele-e-ganhe",
+      "description": "Use a calculadora online"
+    }
+  }
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -37,6 +86,14 @@
 </head>
 <body class="min-h-screen text-white">
   <div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="flex justify-center gap-4 mb-4">
+      <a href="#donation" class="text-emerald-400 hover:text-emerald-300 transition text-sm font-medium flex items-center gap-1">
+        <i class="fas fa-coffee"></i> Me pague um cafézinho
+      </a>
+      <a href="https://github.com/WillianMattosRibeiro" target="_blank" class="text-slate-400 hover:text-slate-300 transition text-sm font-medium flex items-center gap-1">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+    </div>
     <div class="text-center mb-10">
       <h1 class="text-4xl font-bold mb-2">📈 Compensa Parcelar ou Pagar á Vista?</h1>
       <p class="text-slate-400 text-lg">Simule pagamento parcelado (com o saldo total rendendo na conta) ou a vista para ver qual opção compensa mais</p>
@@ -214,7 +271,7 @@
     </div>
 
     <!-- ==================== ÁREA DE DOAÇÃO ==================== -->
-    <div class="mt-20 text-center">
+    <div id="donation" class="mt-20 text-center">
       <p class="text-slate-400 text-sm mb-2">Gostou da calculadora?</p>
       <p class="text-emerald-400 font-semibold text-2xl mb-10">Me ajude a comprar um cafézinho! ☕</p>
 
